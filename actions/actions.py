@@ -25,3 +25,34 @@
 #         dispatcher.utter_message(text="Hello World!")
 #
 #         return []
+
+
+def get_ingredient_list():
+    return
+
+def navigate_utterances(curr_step,instruction):
+    # curr_step int
+    # instruction str
+    next_step = 0
+
+    return next_step
+
+def vague_how_to():
+    # OH
+    return
+
+def specific_qestion(question):
+    url = ''
+    return url
+
+def get_ingredient_quantity():
+    return
+
+def get_temperature():
+    return
+
+def get_time():
+    return
+
+def get_substitude():
+    return

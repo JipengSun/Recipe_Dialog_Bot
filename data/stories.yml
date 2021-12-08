@@ -6,3 +6,15 @@ stories:
    - intent: subscribe
    - action: newsletter_form
    - active_loop: newsletter_form
+
+ - story: greet and subscribe
+    steps:
+   - intent: walkthrough
+   - action: utter_walkthrough
+   - intent: url_providing
+   # https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/ (Links to an external site.)
+   - action: utter_url_providing
+   #Alright. So let's start working with "Classic and Simple Meat Lasagna." What do you want to do?
+   - action: logic
+   # Bot: [1] Go over ingredients list or [2] Go over recipe steps.
+   - active_loop: newsletter_form
