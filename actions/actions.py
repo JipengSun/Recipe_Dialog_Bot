@@ -25,6 +25,10 @@
 #         dispatcher.utter_message(text="Hello World!")
 #
 #         return []
+# from actions.steps_parser import parse_step_data
+import get_recipe_json
+import steps_parser
+
 
 
 def get_ingredient_list():
@@ -51,8 +55,17 @@ def get_ingredient_quantity():
 def get_temperature():
     return
 
-def get_time():
-    return
+def get_time(url, current_step):
+    recipe = get_recipe_json.get_recipe_json(url)
+    recipe_data = steps_parser.parse_step_data(recipe)
+    if recipe_data[current_step]['cooking_time'] == []:
+        return "There is no relavant time to return"
+    else:
+        return "Cooking time is " + recipe_data[current_step]['cooking_time'][0] + "."
+    
 
 def get_substitude():
     return
+
+url1 = 'https://www.allrecipes.com/recipe/172060/hummus-and-prosciutto-wrap/'
+print(get_time(url1,1))
