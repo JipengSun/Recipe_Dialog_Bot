@@ -6,6 +6,8 @@ import get_recipe_json
 from spacy.matcher import Matcher
 import spacy
 
+# nltk.download('punkt')
+
         
 def parse_step_data(recipe_data):
     tools = []
