@@ -30,6 +30,7 @@ import get_recipe_json
 import steps_parser
 
 class Recipe:
+    #be sure to use Recipe.parse_recipe() when you create a recipe
     def __init__(self, url):
         self.url = url
         self.steps = ""
