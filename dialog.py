@@ -86,9 +86,9 @@ def response(intend,input_str,context):
             #print(context['last_response'])
             if context['last_response'] == 'appreciation':
                 go_to_nth_step(str(context['curr_step']+1))
-            else:
-                print("Should I move on to the next step?")
-                context['last_response'] = 'appreciation'
+            # else:
+            #     print("Should I move on to the next step?")
+            #     context['last_response'] = 'appreciation'
                 
             
 
