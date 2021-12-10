@@ -14,6 +14,11 @@ def intend_build():
     intend_group['get_recipe'] = [
         'Walk me through a recipe from AllRecipes.com.'
     ]
+
+    intend_group['get_all_ingredients'] = [
+        'Show me the ingredients list'
+    ]
+
     intend_group['send_url'] = [
     'https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/'
     ]
@@ -35,14 +40,30 @@ def intend_build():
         'What temperature?'
     ]
     intend_group['get_time_of_current_step'] = [
-        'How long do I <specific technique>?',
-        'When is it done?'
+        'How long do I <specific technique>',
+        'When is it done?',
+        'How long do I'
+
     ]
+    intend_group['appreciation'] = [
+        'Thanks',
+        'thx',
+        "Thanks again"
+    ]
+
+    intend_group['confirm'] = [
+        'Yes, please',
+        'yes',
+        'OK'
+    ]
+
     intend_group['get_ingredient_substitution'] = [
         'What can I substitute for <ingredient>?'
     ]
     intend_group['forward_one_step'] = [
-        'Go to the next step'
+        'Go to the next step',
+        'Next',
+        'Next step'
     ]
     intend_group['back_one_step'] = [
         'Go back one step',

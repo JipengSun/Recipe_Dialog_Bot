@@ -10,11 +10,11 @@ Basic goals:
 
 Y1. Recipe retrieval and display (see example above, including "Show me the ingredients list");
 Y2. Navigation utterances ("Go back one step", "Go to the next step", "Repeat please", "Take me to the 1st step", "Take me to the n-th step");
-N3. Vague "how to" questions ("How do I do that?", in which case you can infer a context based on what's parsed for the current step);
+Y3. Vague "how to" questions ("How do I do that?", in which case you can infer a context based on what's parsed for the current step);
 Y4. Specific "how to" questions ("How do I <specific technique>?");
 Y5. Simple "what is" questions ("What is a <tool being mentioned>?");
-N6. Asking about the parameters of the current step ("How much of <ingredient> do I need?", "What temperature?", "How long do I <specific technique>?", "When is it done?");
-N7. Ingredient substitution questions ("What can I substitute for <ingredient>?");
+Y6. Asking about the parameters of the current step ("How much of <ingredient> do I need?", "What temperature?", "How long do I <specific technique>?", "When is it done?");
+Y7. Ingredient substitution questions ("What can I substitute for <ingredient>?");
 Y8. Name your bot :)
 
 '''
@@ -29,7 +29,7 @@ def data_init(url):
     recipe_data = get_recipe_json.get_recipe_json(url)
     step_data = steps_parser.parse_step_data(recipe_data)
     #return [recipe_data,step_data]
-    print(step_data)
+    #print(step_data)
     context.clear()
 
 
@@ -47,7 +47,7 @@ def answer_specific(input_str):
     a=input.split()
     a = '+'.join(a)
     a = a.replace("?","")
-    base_url = 'https://www.youtube.com/results?search_query='
+    base_url = 'https://www.google.com/results?search_query='
     final_url = base_url + a
     return final_url
 
@@ -91,6 +91,20 @@ def response(intend,input_str,context):
         else:
             intend = ''
             response(intend,input_str,context)
+    elif intend == 'get_all_ingredients':
+        get_all_ingredients()
+
+    elif intend == 'appreciation':
+        if context['curr_step'] != len(step_data):
+            print(bot_name+'You are welcome. Should I continue to step ' + str(context['curr_step']+1) + ' ?')
+            context['last_response'] = 'appreciation'
+        else:
+            print(bot_name+ 'You are welcome. You have finished the recipe steps. You can ask more questions.')
+    
+    elif intend == 'confirm':
+        #print(context['last_response'])
+        if context['last_response'] == 'appreciation':
+            go_to_nth_step(str(context['curr_step']+1))
 
     elif intend == 'specific_how_to':
         query_url = answer_specific(input_str)
@@ -145,9 +159,25 @@ def response(intend,input_str,context):
         for token in wt:
             if token not in stop_words:
                 for ig in recipe_data['ingredients']:
-                    if token in ig['name']:
+                    if token in ig['name'] and not answered:
                         #print(token,ig['name'])
                         print(bot_name+'You need '+str(ig['quantity']) + ' '+ig['unit']+' '+ig['name'])
+                        answered = True
+        if not answered:
+            print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
+
+    elif intend == 'get_ingredient_substitution':
+        answered = False
+        wt = nltk.word_tokenize(input_str.lower())
+        for token in wt:
+            if token not in stop_words:
+                for ig in recipe_data['ingredients']:
+                    if token in ig['name'] and not answered:
+                        #print(token,ig['name'])
+                        print(bot_name+'I will search in Internet for suitable substitution of '+ ig['name'])
+                        input_str = 'What can I substitute for '+ig['name']
+                        intend = 'specific_what_is'
+                        response(intend,input_str,context)
                         answered = True
         if not answered:
             print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
@@ -155,13 +185,6 @@ def response(intend,input_str,context):
 
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
-    '''
-    
-    
-    elif intend == 'get_ingredient_amount_of_current_step':
-    
-    elif intend == 'get_ingredient_substitution':
-    '''
     
    
 
@@ -183,9 +206,9 @@ if __name__ == "__main__":
             break
         print('')
         intend = get_intend(input_str)
+        print(intend)
         if len(intend) != 0:
             intend = intend[0]
         response(intend,input_str,context)
-        #print(intend)
         print('')
 
