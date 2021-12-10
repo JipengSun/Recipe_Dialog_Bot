@@ -20,7 +20,7 @@ Y8. Name your bot :)
 '''
 intend_group = intend_building.intend_build()
 bot_name = "JJK Bot: "
-context = {}
+context = {'recipe_specified':False}
 stop_words = ['i','of','do']
 
 def data_init(url):
@@ -67,124 +67,133 @@ def go_to_nth_step(input_str):
                 print(bot_name+'Sorry. There are only '+str(len(step_data))+' steps in the recipe, please specify a correct step.')
 
 def response(intend,input_str,context):
-    if intend == 'greet':
-        print(bot_name+"Hi, how can I help you?")
-        context['last_response'] = 'greet'
+    need_recipe_first = ['select_option','get_all_ingredients','confirm','back_one_step','forward_one_step','goto_specific_step','repeat_current_step','get_time_of_current_step','get_temperature_of_current_step',\
+        'vague_how_to','get_ingredient_amount_of_current_step']
+    if intend in need_recipe_first and context['recipe_specified']:
+        if intend == 'select_option':
+            if context['last_response'] == 'send_url':
+                context['curr_branch'] = input_str
+                if input_str == '1':
+                    get_all_ingredients()
+                elif input_str == '2':
+                    go_to_nth_step('1')
+            else:
+                intend = ''
+                response(intend,input_str,context)
+        elif intend == 'get_all_ingredients':
+            get_all_ingredients()
+        elif intend == 'confirm':
+            #print(context['last_response'])
+            if context['last_response'] == 'appreciation':
+                go_to_nth_step(str(context['curr_step']+1))
 
-    elif intend == 'get_recipe':
-        print(bot_name+'Sure. Please specify a URL.')
-        context['last_response'] = 'get_recipe'
+        elif intend == 'back_one_step':
+            if context['curr_step'] == 1:
+                print(bot_name+'Sorry, this is already the first step.')
+            else:
+                go_to_nth_step(str(context['curr_step']-1))
+        
+        elif intend == 'forward_one_step':
+            if context['curr_step'] == len(step_data):
+                print(bot_name+'Sorry, there is no next step. This is already the last step.')
+            else:
+                go_to_nth_step(str(context['curr_step']+1))
 
-    elif intend == 'send_url':
-        data_init(input_str)
-        print(bot_name+'Alright. So let\'s start working with '+ recipe_data['name'] +'. What do you want to do?')
-        context['last_response'] = 'send_url'
-        print(bot_name+'[1] Go over ingredients list or [2] Go over recipe steps.')
-    
-    elif intend == 'select_option':
-        if context['last_response'] == 'send_url':
-            context['curr_branch'] = input_str
-            if input_str == '1':
-                get_all_ingredients()
-            elif input_str == '2':
-                go_to_nth_step('1')
+        elif intend == 'goto_specific_step':
+            go_to_nth_step(input_str)
+
+        elif intend == 'repeat_current_step':
+            go_to_nth_step(str(context['curr_step']))
+
+        elif intend == 'get_time_of_current_step':
+            if len(step_data[context['curr_step']-1]['cooking_time'])>0:
+                print(bot_name+'It is done after '+step_data[context['curr_step']-1]['cooking_time'][0])
+            else:
+                print(bot_name+'Sorry, I don\'t know how long you should do based on the provided recipe.')
+
+        elif intend == 'get_temperature_of_current_step':
+            if len(step_data[context['curr_step']-1]['cooking_temp'])>0:
+                print(bot_name+'You need '+step_data[context['curr_step']-1]['cooking_temp'][0])
+            else:
+                print(bot_name+'Sorry, I don\'t know what temperature you should heat based on the provided recipe.')
+
+        elif intend == 'vague_how_to':
+            if len(step_data[context['curr_step']-1]['methods'])>0:
+                intend = 'specific_how_to'
+                input_str = 'How to '+ step_data[context['curr_step']-1]['methods'][0]
+                print(bot_name+ 'Now I will search for question \"'+input_str+'\" for you in Internet.')
+                response(intend,input_str,context)
+            else:
+                print(bot_name+'Sorry, I don\'t know what do you refer to, please ask specifically.')
+        
+        elif intend == 'get_ingredient_amount_of_current_step':
+            answered = False
+            wt = nltk.word_tokenize(input_str.lower())
+            for token in wt:
+                if token not in stop_words:
+                    for ig in recipe_data['ingredients']:
+                        if token in ig['name'] and not answered:
+                            #print(token,ig['name'])
+                            print(bot_name+'You need '+str(ig['quantity']) + ' '+ig['unit']+' '+ig['name'])
+                            answered = True
+            if not answered:
+                print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
+
+        elif intend == 'get_ingredient_substitution':
+            answered = False
+            wt = nltk.word_tokenize(input_str.lower())
+            for token in wt:
+                if token not in stop_words:
+                    for ig in recipe_data['ingredients']:
+                        if token in ig['name'] and not answered:
+                            #print(token,ig['name'])
+                            print(bot_name+'I will search in Internet for suitable substitution of '+ ig['name'])
+                            input_str = 'What can I substitute for '+ig['name']
+                            intend = 'specific_what_is'
+                            response(intend,input_str,context)
+                            answered = True
+            if not answered:
+                print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
+
+
         else:
-            intend = ''
-            response(intend,input_str,context)
-    elif intend == 'get_all_ingredients':
-        get_all_ingredients()
-
-    elif intend == 'appreciation':
-        if context['curr_step'] != len(step_data):
-            print(bot_name+'You are welcome. Should I continue to step ' + str(context['curr_step']+1) + ' ?')
-            context['last_response'] = 'appreciation'
-        else:
-            print(bot_name+ 'You are welcome. You have finished the recipe steps. You can ask more questions.')
-    
-    elif intend == 'confirm':
-        #print(context['last_response'])
-        if context['last_response'] == 'appreciation':
-            go_to_nth_step(str(context['curr_step']+1))
-
-    elif intend == 'specific_how_to':
-        query_url = answer_specific(input_str)
-        print(bot_name+ 'No worries. I found a reference for you: '+query_url)
-
-    elif intend == 'specific_what_is':
-        query_url = answer_specific(input_str)
-        print(bot_name+ 'No worries. I found a reference for you: '+query_url)
-
-    elif intend == 'back_one_step':
-        if context['curr_step'] == 1:
-            print(bot_name+'Sorry, this is already the first step.')
-        else:
-            go_to_nth_step(str(context['curr_step']-1))
-    
-    elif intend == 'forward_one_step':
-        if context['curr_step'] == len(step_data):
-            print(bot_name+'Sorry, there is no next step. This is already the last step.')
-        else:
-            go_to_nth_step(str(context['curr_step']+1))
-
-    elif intend == 'goto_specific_step':
-        go_to_nth_step(input_str)
-
-    elif intend == 'repeat_current_step':
-        go_to_nth_step(str(context['curr_step']))
-
-    elif intend == 'get_time_of_current_step':
-        if len(step_data[context['curr_step']-1]['cooking_time'])>0:
-            print(bot_name+'It is done after '+step_data[context['curr_step']-1]['cooking_time'][0])
-        else:
-            print(bot_name+'Sorry, I don\'t know how long you should do based on the provided recipe.')
-
-    elif intend == 'get_temperature_of_current_step':
-        if len(step_data[context['curr_step']-1]['cooking_temp'])>0:
-            print(bot_name+'You need '+step_data[context['curr_step']-1]['cooking_temp'][0])
-        else:
-            print(bot_name+'Sorry, I don\'t know what temperature you should heat based on the provided recipe.')
-
-    elif intend == 'vague_how_to':
-        if len(step_data[context['curr_step']-1]['methods'])>0:
-            intend = 'specific_how_to'
-            input_str = 'How to '+ step_data[context['curr_step']-1]['methods'][0]
-            print(bot_name+ 'Now I will search for question \"'+input_str+'\" for you in Internet.')
-            response(intend,input_str,context)
-        else:
-            print(bot_name+'Sorry, I don\'t know what do you refer to, please ask specifically.')
-    
-    elif intend == 'get_ingredient_amount_of_current_step':
-        answered = False
-        wt = nltk.word_tokenize(input_str.lower())
-        for token in wt:
-            if token not in stop_words:
-                for ig in recipe_data['ingredients']:
-                    if token in ig['name'] and not answered:
-                        #print(token,ig['name'])
-                        print(bot_name+'You need '+str(ig['quantity']) + ' '+ig['unit']+' '+ig['name'])
-                        answered = True
-        if not answered:
-            print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
-
-    elif intend == 'get_ingredient_substitution':
-        answered = False
-        wt = nltk.word_tokenize(input_str.lower())
-        for token in wt:
-            if token not in stop_words:
-                for ig in recipe_data['ingredients']:
-                    if token in ig['name'] and not answered:
-                        #print(token,ig['name'])
-                        print(bot_name+'I will search in Internet for suitable substitution of '+ ig['name'])
-                        input_str = 'What can I substitute for '+ig['name']
-                        intend = 'specific_what_is'
-                        response(intend,input_str,context)
-                        answered = True
-        if not answered:
-            print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
-
-
+            print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     else:
-        print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
+        if intend == 'greet':
+            print(bot_name+"Hi, how can I help you?")
+            context['last_response'] = 'greet'
+
+        elif intend == 'get_recipe':
+            print(bot_name+'Sure. Please specify a URL.')
+            context['last_response'] = 'get_recipe'
+
+        elif intend == 'send_url':
+            data_init(input_str)
+            print(bot_name+'Alright. So let\'s start working with '+ recipe_data['name'] +'. What do you want to do?')
+            context['last_response'] = 'send_url'
+            context['recipe_specified'] = True
+            print(bot_name+'[1] Go over ingredients list or [2] Go over recipe steps.')
+
+        elif intend == 'appreciation':
+            if 'curr_step' in context.keys():
+                if context['curr_step'] != len(step_data):
+                    print(bot_name+'You are welcome. Should I continue to step ' + str(context['curr_step']+1) + ' ?')
+                    context['last_response'] = 'appreciation'
+                else:
+                    print(bot_name+ 'You are welcome. You have finished the recipe steps. You can ask more questions.')
+            else:
+                print(bot_name+'Thank you. What can I do for you?')
+
+        elif intend == 'specific_how_to':
+            query_url = answer_specific(input_str)
+            print(bot_name+ 'No worries. I found a reference for you: '+query_url)
+
+        elif intend == 'specific_what_is':
+            query_url = answer_specific(input_str)
+            print(bot_name+ 'No worries. I found a reference for you: '+query_url)
+        
+        else:
+            print(bot_name+'Could you please tell me the recipe URL first?')
     
    
 

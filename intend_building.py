@@ -10,7 +10,8 @@ def intend_build():
     intend_group['greet'] = [
         'Hi',
         'Hello',
-        'Hey'
+        'Hey',
+        'hi'
     ]
     intend_group['get_recipe'] = [
         'Walk me through a recipe from AllRecipes.com.',
