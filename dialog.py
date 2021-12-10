@@ -212,3 +212,52 @@ if __name__ == "__main__":
         response(intend,input_str,context)
         print('')
 
+'''
+<USER STORY>
+
+User: Walk me through a recipe from AllRecipes.com.
+
+Bot: Sure. Please specify a URL.
+
+User: https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/ (Links to an external site.)
+
+Bot: Alright. So let's start working with "Classic and Simple Meat Lasagna." What do you want to do?
+
+Bot: [1] Go over ingredients list or [2] Go over recipe steps.
+
+User: 2.
+
+Bot: The 1st step is: Preheat oven to 350 degrees F (175 degrees C).
+
+User: How do I preheat the oven?
+
+Bot: No worries. I found a reference for you: https://www.youtube.com/results?search_query=how+to+preheat+oven (Links to an external site.)
+
+User: Thanks!
+
+Bot: Should I continue to the 2nd step?
+
+User: Show me the ingredients list.
+
+Bot: Here are the ingredients for "Classic and Simple Meat Lasagna":
+
+12 whole wheat lasagna noodles
+
+1 pound lean ground beef
+
+(...)
+
+1 1/2 25 ounce jars tomato-basil pasta sauce
+
+2 cups mozzarella cheese, shredded
+
+User: Thanks again!
+
+Bot: Should I continue to the 2nd step?
+
+User: Yes, please.
+
+Bot: (...)
+
+</USER STORY>
+'''
