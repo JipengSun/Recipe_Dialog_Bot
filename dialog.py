@@ -1,3 +1,4 @@
+import nltk
 import get_recipe_json
 import steps_parser
 import intend_building
@@ -20,6 +21,7 @@ Y8. Name your bot :)
 intend_group = intend_building.intend_build()
 bot_name = "JJK Bot: "
 context = {}
+stop_words = ['i','of','do']
 
 def data_init(url):
     global recipe_data 
@@ -136,6 +138,19 @@ def response(intend,input_str,context):
             response(intend,input_str,context)
         else:
             print(bot_name+'Sorry, I don\'t know what do you refer to, please ask specifically.')
+    
+    elif intend == 'get_ingredient_amount_of_current_step':
+        answered = False
+        wt = nltk.word_tokenize(input_str.lower())
+        for token in wt:
+            if token not in stop_words:
+                for ig in recipe_data['ingredients']:
+                    if token in ig['name']:
+                        #print(token,ig['name'])
+                        print(bot_name+'You need '+str(ig['quantity']) + ' '+ig['unit']+' '+ig['name'])
+                        answered = True
+        if not answered:
+            print(bot_name+'Sorry I can\'t find the ingredient you specified is used in this step.')
 
 
     else:
