@@ -92,6 +92,11 @@ def response(intend,input_str,context):
             #print(context['last_response'])
             if context['last_response'] == 'appreciation':
                 go_to_nth_step(str(context['curr_step']+1))
+            else:
+                print("Is there anything else I can help you with")
+                context['last_response'] = 'appreciation'
+                
+            
 
         elif intend == 'back_one_step':
             if context['curr_step'] == 1:
@@ -163,7 +168,7 @@ def response(intend,input_str,context):
 
 
         else:
-            print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
+            print(bot_name+"Sorry. I didn't understand you. Could you please ask another question or try rephrasing your last one?")
     else:
         if intend == 'greet':
             print(bot_name+"Hi, how can I help you?")
