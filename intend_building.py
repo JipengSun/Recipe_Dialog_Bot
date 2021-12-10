@@ -9,14 +9,18 @@ def intend_build():
 
     intend_group['greet'] = [
         'Hi',
-        'Hello'
+        'Hello',
+        'Hey'
     ]
     intend_group['get_recipe'] = [
-        'Walk me through a recipe from AllRecipes.com.'
+        'Walk me through a recipe from AllRecipes.com.',
+        'I want to cook something',
+        'Tell me how to cook this recipe'
     ]
 
     intend_group['get_all_ingredients'] = [
-        'Show me the ingredients list'
+        'Show me the ingredients list',
+        'What do I need for the recipe'
     ]
 
     intend_group['send_url'] = [
@@ -37,7 +41,8 @@ def intend_build():
         'How much of <ingredient> do I need?'
     ]
     intend_group['get_temperature_of_current_step'] = [
-        'What temperature?'
+        'What temperature?',
+        'How hot?'
     ]
     intend_group['get_time_of_current_step'] = [
         'How long do I <specific technique>',
@@ -54,7 +59,8 @@ def intend_build():
     intend_group['confirm'] = [
         'Yes, please',
         'yes',
-        'OK'
+        'OK',
+        'ok'
     ]
 
     intend_group['get_ingredient_substitution'] = [
@@ -67,7 +73,8 @@ def intend_build():
     ]
     intend_group['back_one_step'] = [
         'Go back one step',
-        'Previous step'
+        'Previous step',
+        'Back'
     ]
     intend_group['goto_specific_step'] = [
         'Take me to the n-th step',
@@ -81,7 +88,9 @@ def intend_build():
     intend_group['repeat_current_step'] = [
         'Repeat please',
         'Repeat current step',
-        'Repeat'
+        'Repeat',
+        'Again',
+        'Say that again'
     ]
     intend_group['select_option'] = [
         '1',
