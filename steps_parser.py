@@ -23,6 +23,8 @@ def parse_step_data(recipe_data):
     stop_words = ['a','to','or','and','in','read','at','room','temperature']
 
     time_words = ['minutes','minute','hour','hours','seconds','second']
+
+    temp_words = ['degrees','F','C']
     
     for step in recipe_data['steps']:
         step_structure = {
@@ -30,7 +32,8 @@ def parse_step_data(recipe_data):
         'ingredients':[],
         'tools':[],
         'methods':[],
-        'cooking_time':[]
+        'cooking_time':[],
+        'cooking_temp':[]
         }
         step_structure['original_text'] = step
 
@@ -50,7 +53,8 @@ def parse_step_data(recipe_data):
                 cooking_tools_set.add(nlp_tokens[i].lemma_.lower())
             if token.isnumeric() and i< len(step_tokens)-1 and step_tokens[i+1] in time_words:
                 step_structure['cooking_time'].append(step_tokens[i] +' '+ step_tokens[i+1])
-
+            if token.isnumeric() and i< len(step_tokens)-1 and step_tokens[i+1] in temp_words:
+                step_structure['cooking_temp'].append(step_tokens[i] +' '+ step_tokens[i+1])
             for j, ingredient in enumerate(recipe_data['ingredients']):
                 if token.isalpha() and token not in stop_words and token in ingredient['name']:
                     #print(token)

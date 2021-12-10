@@ -7,14 +7,14 @@ import os
 '''
 Basic goals:
 
-1. Recipe retrieval and display (see example above, including "Show me the ingredients list");
-2. Navigation utterances ("Go back one step", "Go to the next step", "Repeat please", "Take me to the 1st step", "Take me to the n-th step");
-3. Vague "how to" questions ("How do I do that?", in which case you can infer a context based on what's parsed for the current step);
-4. Specific "how to" questions ("How do I <specific technique>?");
-5. Simple "what is" questions ("What is a <tool being mentioned>?");
-6. Asking about the parameters of the current step ("How much of <ingredient> do I need?", "What temperature?", "How long do I <specific technique>?", "When is it done?");
-7. Ingredient substitution questions ("What can I substitute for <ingredient>?");
-8. Name your bot :)
+Y1. Recipe retrieval and display (see example above, including "Show me the ingredients list");
+Y2. Navigation utterances ("Go back one step", "Go to the next step", "Repeat please", "Take me to the 1st step", "Take me to the n-th step");
+N3. Vague "how to" questions ("How do I do that?", in which case you can infer a context based on what's parsed for the current step);
+Y4. Specific "how to" questions ("How do I <specific technique>?");
+Y5. Simple "what is" questions ("What is a <tool being mentioned>?");
+N6. Asking about the parameters of the current step ("How much of <ingredient> do I need?", "What temperature?", "How long do I <specific technique>?", "When is it done?");
+N7. Ingredient substitution questions ("What can I substitute for <ingredient>?");
+Y8. Name your bot :)
 
 '''
 intend_group = intend_building.intend_build()
@@ -27,6 +27,7 @@ def data_init(url):
     recipe_data = get_recipe_json.get_recipe_json(url)
     step_data = steps_parser.parse_step_data(recipe_data)
     #return [recipe_data,step_data]
+    print(step_data)
 
 
 def get_intend(sentence):
@@ -34,7 +35,7 @@ def get_intend(sentence):
     for intend, eglist in intend_group.items():
         intends = difflib.get_close_matches(sentence,eglist)
         if len(intends) != 0:
-            print(intends)
+            #print(intends)
             intend_key.append(intend)
     return intend_key
 
@@ -114,14 +115,26 @@ def response(intend,input_str,context):
     elif intend == 'repeat_current_step':
         go_to_nth_step(str(context['curr_step']))
 
+    elif intend == 'get_time_of_current_step':
+        if len(step_data[context['curr_step']-1]['cooking_time'])>0:
+            print(bot_name+'It is done after '+step_data[context['curr_step']-1]['cooking_time'][0])
+        else:
+            print(bot_name+'Sorry, I don\'t know how long you should do based on the provided recipe.')
+
+    elif intend == 'get_temperature_of_current_step':
+        if len(step_data[context['curr_step']-1]['cooking_temp'])>0:
+            print(bot_name+'You need '+step_data[context['curr_step']-1]['cooking_temp'][0])
+        else:
+            print(bot_name+'Sorry, I don\'t know what temperature you should heat based on the provided recipe.')
+
+
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     '''
     
     elif intend == 'vague_how_to':
     elif intend == 'get_ingredient_amount_of_current_step':
-    elif intend == 'get_temperature_of_current_step':
-    elif intend == 'get_time_of_current_step':
+    
     elif intend == 'get_ingredient_substitution':
     '''
     
@@ -131,20 +144,23 @@ def response(intend,input_str,context):
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear')
 
-    intend = get_intend('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
-    print(intend)
-    data_init('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
+    #intend = get_intend('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
+    #print(intend)
+    #data_init('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
 
 
-    print('Welcome to talk with JJK Recipe Bot!')
+    print('Welcome to talk with JJK(Jipeng_Josh_Komal) Recipe Bot!')
     print('You can type whatever you want to chat with JJK, type \'q\' to quit the dialog.')
+    print('')
     while(1):
         input_str = input("You: ")
         if input_str == 'q':
             break
+        print('')
         intend = get_intend(input_str)
         if len(intend) != 0:
             intend = intend[0]
         response(intend,input_str,context)
-        print(intend)
+        #print(intend)
+        print('')
 

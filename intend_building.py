@@ -35,7 +35,8 @@ def intend_build():
         'What temperature?'
     ]
     intend_group['get_time_of_current_step'] = [
-        'How long do I <specific technique>?'
+        'How long do I <specific technique>?',
+        'When is it done?'
     ]
     intend_group['get_ingredient_substitution'] = [
         'What can I substitute for <ingredient>?'
@@ -57,7 +58,9 @@ def intend_build():
         'Take me to the 6th step',
     ]
     intend_group['repeat_current_step'] = [
-        'Repeat please'
+        'Repeat please',
+        'Repeat current step',
+        'Repeat'
     ]
     intend_group['select_option'] = [
         '1',
