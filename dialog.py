@@ -4,6 +4,19 @@ import intend_building
 import difflib
 import os
 
+'''
+Basic goals:
+
+1. Recipe retrieval and display (see example above, including "Show me the ingredients list");
+2. Navigation utterances ("Go back one step", "Go to the next step", "Repeat please", "Take me to the 1st step", "Take me to the n-th step");
+3. Vague "how to" questions ("How do I do that?", in which case you can infer a context based on what's parsed for the current step);
+4. Specific "how to" questions ("How do I <specific technique>?");
+5. Simple "what is" questions ("What is a <tool being mentioned>?");
+6. Asking about the parameters of the current step ("How much of <ingredient> do I need?", "What temperature?", "How long do I <specific technique>?", "When is it done?");
+7. Ingredient substitution questions ("What can I substitute for <ingredient>?");
+8. Name your bot :)
+
+'''
 intend_group = intend_building.intend_build()
 bot_name = "JJK Bot: "
 context = {}
@@ -83,6 +96,24 @@ def response(intend,input_str,context):
         query_url = answer_specific(input_str)
         print(bot_name+ 'No worries. I found a reference for you: '+query_url)
 
+    elif intend == 'back_one_step':
+        if context['curr_step'] == 1:
+            print(bot_name+'Sorry, this is already the first step.')
+        else:
+            go_to_nth_step(str(context['curr_step']-1))
+    
+    elif intend == 'forward_one_step':
+        if context['curr_step'] == len(step_data):
+            print(bot_name+'Sorry, there is no next step. This is already the last step.')
+        else:
+            go_to_nth_step(str(context['curr_step']+1))
+
+    elif intend == 'goto_specific_step':
+        go_to_nth_step(input_str)
+
+    elif intend == 'repeat_current_step':
+        go_to_nth_step(str(context['curr_step']))
+
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     '''
@@ -92,10 +123,6 @@ def response(intend,input_str,context):
     elif intend == 'get_temperature_of_current_step':
     elif intend == 'get_time_of_current_step':
     elif intend == 'get_ingredient_substitution':
-    elif intend == 'forward_one_step':
-    elif intend == 'back_one_step':
-    elif intend == 'goto_specific_step':
-    elif intend == 'repeat_current_step':
     '''
     
    
