@@ -25,6 +25,15 @@ def get_intend(sentence):
             intend_key.append(intend)
     return intend_key
 
+def answer_specific(input_str):
+    input = input_str.lower()
+    a=input.split()
+    a = '+'.join(a)
+    a = a.replace("?","")
+    base_url = 'https://www.youtube.com/results?search_query='
+    final_url = base_url + a
+    return final_url
+
 def response(intend,input_str,context):
     if intend == 'greet':
         print(bot_name+"Hi, how can I help you?")
@@ -33,11 +42,16 @@ def response(intend,input_str,context):
     elif intend == 'send_url':
         data_init(input_str)
         print(bot_name+'Alright. So let\'s start working with '+ recipe_data['name'] +'. What do you want to do?')
+    elif intend == 'specific_how_to':
+        query_url = answer_specific(input_str)
+        print(bot_name+ 'No worries. I found a reference for you: '+query_url)
+    elif intend == 'specific_what_is':
+        query_url = answer_specific(input_str)
+        print(bot_name+ 'No worries. I found a reference for you: '+query_url)
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     '''
-    elif intend == 'specific_how_to':
-    elif intend == 'specific_what_is':
+    
     elif intend == 'vague_how_to':
     elif intend == 'get_ingredient_amount_of_current_step':
     elif intend == 'get_temperature_of_current_step':
@@ -69,6 +83,6 @@ if __name__ == "__main__":
         intend = get_intend(input_str)
         if len(intend) != 0:
             intend = intend[0]
-        response(intend,input_str)
+        response(intend,input_str,context)
         print(intend)
 
