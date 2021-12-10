@@ -89,9 +89,9 @@ def specific_qestion(question):
 def get_temperature():
     return
     
-
-def get_substitute():
-    return
+def get_substitute(ingredient):
+    search = "https://www.google.com/search?q=what+can+i+substitute+for+" + str(ingredient)
+    
 
 url1 = 'https://www.allrecipes.com/recipe/172060/hummus-and-prosciutto-wrap/'
 # print(get_time(url1,1))
