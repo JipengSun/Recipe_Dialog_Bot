@@ -1,3 +1,8 @@
+entity = {
+    'step_number':['1','2','3','4','5','6','7','8','9'],
+    '':[]
+}
+
 def intend_build():
 
     intend_group = {}
@@ -43,10 +48,20 @@ def intend_build():
         'Previous step'
     ]
     intend_group['goto_specific_step'] = [
-        'Take me to the n-th step'
+        'Take me to the n-th step',
+        'Take me to the 1st step',
+        'Take me to the 2nd step',
+        'Take me to the 3rd step',
+        'Take me to the 4th step',
+        'Take me to the 5th step',
+        'Take me to the 6th step',
     ]
     intend_group['repeat_current_step'] = [
         'Repeat please'
+    ]
+    intend_group['select_option'] = [
+        '1',
+        '2'
     ]
     return intend_group
 

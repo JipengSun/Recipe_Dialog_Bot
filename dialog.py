@@ -34,20 +34,55 @@ def answer_specific(input_str):
     final_url = base_url + a
     return final_url
 
+def get_all_ingredients():
+    print(bot_name+'Here are the ingredients for \"'+recipe_data['name'] +'\" :')
+    for ingDict in recipe_data['ingredients']:
+        print(str(ingDict['quantity'])+' '+ingDict['unit']+' '+ingDict['name'])
+
+def go_to_nth_step(input_str):
+    for c in input_str:
+        if c.isnumeric():
+            step = int(c)
+            if 0 <step<= len(step_data):
+                context['curr_step'] = step
+                print(bot_name+'The step '+c+' is: '+step_data[step-1]['original_text'])
+            else:
+                print(bot_name+'Sorry. There are only '+str(len(step_data))+' steps in the recipe, please specify a correct step.')
+
 def response(intend,input_str,context):
     if intend == 'greet':
         print(bot_name+"Hi, how can I help you?")
+        context['last_response'] = 'greet'
+
     elif intend == 'get_recipe':
         print(bot_name+'Sure. Please specify a URL.')
+        context['last_response'] = 'get_recipe'
+
     elif intend == 'send_url':
         data_init(input_str)
         print(bot_name+'Alright. So let\'s start working with '+ recipe_data['name'] +'. What do you want to do?')
+        context['last_response'] = 'send_url'
+        print(bot_name+'[1] Go over ingredients list or [2] Go over recipe steps.')
+    
+    elif intend == 'select_option':
+        if context['last_response'] == 'send_url':
+            context['curr_branch'] = input_str
+            if input_str == '1':
+                get_all_ingredients()
+            elif input_str == '2':
+                go_to_nth_step('1')
+        else:
+            intend = ''
+            response(intend,input_str,context)
+
     elif intend == 'specific_how_to':
         query_url = answer_specific(input_str)
         print(bot_name+ 'No worries. I found a reference for you: '+query_url)
+
     elif intend == 'specific_what_is':
         query_url = answer_specific(input_str)
         print(bot_name+ 'No worries. I found a reference for you: '+query_url)
+
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     '''
