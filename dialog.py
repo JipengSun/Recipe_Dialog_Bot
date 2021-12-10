@@ -2,8 +2,11 @@ import get_recipe_json
 import steps_parser
 import intend_building
 import difflib
+import os
 
 intend_group = intend_building.intend_build()
+bot_name = "JJK Bot: "
+context = {}
 
 def data_init(url):
     global recipe_data 
@@ -22,19 +25,50 @@ def get_intend(sentence):
             intend_key.append(intend)
     return intend_key
 
+def response(intend,input_str,context):
+    if intend == 'greet':
+        print(bot_name+"Hi, how can I help you?")
+    elif intend == 'get_recipe':
+        print(bot_name+'Sure. Please specify a URL.')
+    elif intend == 'send_url':
+        data_init(input_str)
+        print(bot_name+'Alright. So let\'s start working with '+ recipe_data['name'] +'. What do you want to do?')
+    else:
+        print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
+    '''
+    elif intend == 'specific_how_to':
+    elif intend == 'specific_what_is':
+    elif intend == 'vague_how_to':
+    elif intend == 'get_ingredient_amount_of_current_step':
+    elif intend == 'get_temperature_of_current_step':
+    elif intend == 'get_time_of_current_step':
+    elif intend == 'get_ingredient_substitution':
+    elif intend == 'forward_one_step':
+    elif intend == 'back_one_step':
+    elif intend == 'goto_specific_step':
+    elif intend == 'repeat_current_step':
+    '''
+    
+   
 
+# now, to clear the screen
 if __name__ == "__main__":
+    os.system('cls' if os.name=='nt' else 'clear')
+
     intend = get_intend('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
     print(intend)
     data_init('https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/')
-    end = False
+
+
     print('Welcome to talk with JJK Recipe Bot!')
     print('You can type whatever you want to chat with JJK, type \'q\' to quit the dialog.')
-    while(not end):
+    while(1):
         input_str = input("You: ")
         if input_str == 'q':
-            end = True
             break
         intend = get_intend(input_str)
+        if len(intend) != 0:
+            intend = intend[0]
+        response(intend,input_str)
         print(intend)
 
