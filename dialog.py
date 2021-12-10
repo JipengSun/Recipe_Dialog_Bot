@@ -28,6 +28,7 @@ def data_init(url):
     step_data = steps_parser.parse_step_data(recipe_data)
     #return [recipe_data,step_data]
     print(step_data)
+    context.clear()
 
 
 def get_intend(sentence):
@@ -127,12 +128,21 @@ def response(intend,input_str,context):
         else:
             print(bot_name+'Sorry, I don\'t know what temperature you should heat based on the provided recipe.')
 
+    elif intend == 'vague_how_to':
+        if len(step_data[context['curr_step']-1]['methods'])>0:
+            intend = 'specific_how_to'
+            input_str = 'How to '+ step_data[context['curr_step']-1]['methods'][0]
+            print(bot_name+ 'Now I will search for question \"'+input_str+'\" for you in Internet.')
+            response(intend,input_str,context)
+        else:
+            print(bot_name+'Sorry, I don\'t know what do you refer to, please ask specifically.')
+
 
     else:
         print(bot_name+"Sorry. I can't understand you for now. Could you please change another question?")
     '''
     
-    elif intend == 'vague_how_to':
+    
     elif intend == 'get_ingredient_amount_of_current_step':
     
     elif intend == 'get_ingredient_substitution':
