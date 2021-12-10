@@ -25,7 +25,9 @@ def intend_build():
     ]
 
     intend_group['send_url'] = [
-    'https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/'
+    'https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/',
+    'https://www.allrecipes.com/recipe/'
+
     ]
     intend_group['specific_how_to'] = [
         'How do I <specific technique>?',
@@ -70,7 +72,8 @@ def intend_build():
     intend_group['forward_one_step'] = [
         'Go to the next step',
         'Next',
-        'Next step'
+        'Next step',
+        'next'
     ]
     intend_group['back_one_step'] = [
         'Go back one step',
@@ -78,13 +81,15 @@ def intend_build():
         'Back'
     ]
     intend_group['goto_specific_step'] = [
-        'Take me to the n-th step',
         'Take me to the 1st step',
         'Take me to the 2nd step',
         'Take me to the 3rd step',
-        'Take me to the 4th step',
-        'Take me to the 5th step',
-        'Take me to the 6th step',
+        'Take me to the nth step',
+        'Go to the 1st step',
+        'Go to the 2nd step',
+        'Go to the 3rd step',
+        'Go to the nth step',
+        
     ]
     intend_group['repeat_current_step'] = [
         'Repeat please',

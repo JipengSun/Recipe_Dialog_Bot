@@ -35,11 +35,17 @@ def data_init(url):
 
 def get_intend(sentence):
     intend_key = []
+    similarity_dict = {}
     for intend, eglist in intend_group.items():
-        intends = difflib.get_close_matches(sentence,eglist)
-        if len(intends) != 0:
-            #print(intends)
-            intend_key.append(intend)
+        for eg in eglist:
+            score_list = []
+            editdist = nltk.edit_distance(sentence.lower(),eg.lower())
+            score_list.append(float(editdist/len(sentence)))
+        minscore = min(score_list)
+        similarity_dict[intend] = minscore
+    minkey = min(similarity_dict,key = lambda k: similarity_dict[k])
+    if (similarity_dict[minkey]<1):
+        intend_key.append(minkey)
     return intend_key
 
 def answer_specific(input_str):
