@@ -228,7 +228,7 @@ if __name__ == "__main__":
             break
         print('')
         intend = get_intend(input_str)
-        print(intend)
+        # print(intend)
         if len(intend) != 0:
             intend = intend[0]
         response(intend,input_str,context)
