@@ -30,11 +30,11 @@ def intend_build():
 
     ]
     intend_group['specific_how_to'] = [
-        'How do I <specific technique>?',
+        'How do I method?',
     ]
 
     intend_group['specific_what_is'] = [
-        'What is a <tool being mentioned>?',
+        'What is a tool?',
     ]
 
     intend_group['vague_how_to'] = [
@@ -45,7 +45,8 @@ def intend_build():
     ]
     intend_group['get_temperature_of_current_step'] = [
         'What temperature?',
-        'How hot?'
+        'How hot?',
+        'what temperature'
     ]
     intend_group['get_time_of_current_step'] = [
         'How long do I <specific technique>',

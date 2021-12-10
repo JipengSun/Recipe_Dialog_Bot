@@ -37,14 +37,17 @@ def get_intend(sentence):
     intend_key = []
     similarity_dict = {}
     for intend, eglist in intend_group.items():
+        score_list = []
         for eg in eglist:
-            score_list = []
             editdist = nltk.edit_distance(sentence.lower(),eg.lower())
             score_list.append(float(editdist/len(sentence)))
+            #print(eg,float(editdist/len(sentence)))
+        #print(score_list)
         minscore = min(score_list)
         similarity_dict[intend] = minscore
     minkey = min(similarity_dict,key = lambda k: similarity_dict[k])
-    if (similarity_dict[minkey]<1):
+    #print(similarity_dict)
+    if (similarity_dict[minkey]<0.6):
         intend_key.append(minkey)
     return intend_key
 
@@ -202,9 +205,8 @@ def response(intend,input_str,context):
         elif intend == 'specific_what_is':
             query_url = answer_specific(input_str)
             print(bot_name+ 'No worries. I found a reference for you: '+query_url)
-        
         else:
-            print(bot_name+'Could you please tell me the recipe URL first?')
+            print(bot_name+'I don\'t know what you mean for now. Or could you please tell me the recipe URL first?')
     
    
 
